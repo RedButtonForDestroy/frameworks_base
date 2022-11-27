@@ -11546,6 +11546,13 @@ public final class Settings {
         public static final String QS_SHOW_BRIGHTNESS_SLIDER = "qs_show_brightness_slider";
 
         /**
+         * Whether to show brightness slider in qqs.
+         * Default 0.
+         * @hide
+         */
+        public static final String QQS_SHOW_BRIGHTNESS_SLIDER = "qqs_show_brightness_slider";
+
+        /**
          * Whether to show the auto brightness icon in quick settings panel.
          * @hide
          */

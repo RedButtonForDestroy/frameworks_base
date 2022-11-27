@@ -447,6 +447,10 @@ public class QSPanel extends LinearLayout implements Tunable {
         }
     }
 
+    protected boolean isLandscape() {
+        return mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
     private void switchToParent(View child, ViewGroup parent, int index) {
         switchToParent(child, parent, index, getDumpableTag());
     }

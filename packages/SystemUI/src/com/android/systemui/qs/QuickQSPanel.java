@@ -57,6 +57,20 @@ public class QuickQSPanel extends QSPanel {
         return new QQSSideLabelTileLayout(mContext);
     }
 
+    @Override
+    protected void setBrightnessViewMargin() {
+        if (mBrightnessView == null) {
+            return;
+        }
+
+        final MarginLayoutParams lp = (MarginLayoutParams) mBrightnessView.getLayoutParams();
+
+        lp.topMargin = mContext.getResources()
+            .getDimensionPixelSize(R.dimen.qs_brightness_margin_top);
+        lp.bottomMargin = 0;
+        
+        mBrightnessView.setLayoutParams(lp);
+    }
 
     @Override
     protected boolean displayMediaMarginsOnMedia() {
