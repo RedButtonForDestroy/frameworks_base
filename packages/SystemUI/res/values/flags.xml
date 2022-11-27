@@ -36,4 +36,10 @@
       avatar will no longer show on the lockscreen -->
     <bool name="flag_user_switcher_chip">false</bool>
 
+    <!-- Enable unified status bar signal icon -->
+    <bool name="flag_user_enable_combined_status_bar_signal_icon">false</bool>
+
+    <!-- Enable unified qs header -->
+    <bool name="flag_user_enable_combined_qs_header">false</bool>
+
 </resources>
