@@ -109,7 +109,7 @@ public class Flags {
             new BooleanFlag(500, true);
 
     public static final BooleanFlag COMBINED_QS_HEADERS =
-            new BooleanFlag(501, R.bool.flag_user_enable_combined_qs_header);
+            new ResourceBooleanFlag(501, R.bool.flag_user_enable_combined_qs_header);
 
     public static final ResourceBooleanFlag PEOPLE_TILE =
             new ResourceBooleanFlag(502, R.bool.flag_conversations);
@@ -130,7 +130,7 @@ public class Flags {
     /***************************************/
     // 600- status bar
     public static final BooleanFlag COMBINED_STATUS_BAR_SIGNAL_ICONS =
-            new BooleanFlag(601, R.bool.flag_user_enable_combined_status_bar_signal_icon);
+            new ResourceBooleanFlag(601, R.bool.flag_user_enable_combined_status_bar_signal_icon);
 
     public static final ResourceBooleanFlag STATUS_BAR_USER_SWITCHER =
             new ResourceBooleanFlag(602, R.bool.flag_user_switcher_chip);
