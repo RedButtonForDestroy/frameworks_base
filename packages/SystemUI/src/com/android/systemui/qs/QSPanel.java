@@ -59,7 +59,10 @@ public class QSPanel extends LinearLayout implements Tunable {
             "customsecure:" + Settings.Secure.QS_SHOW_AUTO_BRIGHTNESS;
     public static final String QS_SHOW_BRIGHTNESS_SLIDER =
             "customsecure:" + Settings.Secure.QS_SHOW_BRIGHTNESS_SLIDER;
-
+    public static final String QQS_SHOW_BRIGHTNESS_SLIDER =
+            "customsecure:" + Settings.Secure.QQS_SHOW_BRIGHTNESS_SLIDER;
+    //Inherits from global qs value
+    public static final String QQS_SHOW_AUTO_BRIGHTNESS = QS_SHOW_AUTO_BRIGHTNESS;
     public static final String QS_SHOW_BRIGHTNESS = "qs_show_brightness";
     public static final String QS_SHOW_HEADER = "qs_show_header";
 
@@ -445,10 +448,6 @@ public class QSPanel extends LinearLayout implements Tunable {
             switchToParent(mFooter, parent, index);
             index++;
         }
-    }
-
-    protected boolean isLandscape() {
-        return mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     private void switchToParent(View child, ViewGroup parent, int index) {

@@ -24,12 +24,14 @@ import static com.android.systemui.qs.QSPanel.QS_SHOW_BRIGHTNESS_SLIDER;
 import static com.android.systemui.qs.dagger.QSFragmentModule.QS_USING_MEDIA_PLAYER;
 
 import android.content.res.Configuration;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.media.MediaHierarchyManager;
 import com.android.systemui.media.MediaHost;
@@ -44,6 +46,7 @@ import com.android.systemui.settings.brightness.BrightnessSliderController;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.BrightnessMirrorController;
 import com.android.systemui.tuner.TunerService;
+import com.android.systemui.util.settings.SystemSettings;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -66,15 +69,12 @@ public class QSPanelController extends QSPanelControllerBase<QSPanel> {
     private boolean mGridContentVisible = true;
 
     private final QSPanel.OnConfigurationChangedListener mOnConfigurationChangedListener =
-            new QSPanel.OnConfigurationChangedListener() {
-        @Override
-        public void onConfigurationChange(Configuration newConfig) {
-            mView.updateResources();
-            if (mView.isListening()) {
-                refreshAllTiles();
-            }
-        }
-    };
+            newConfig -> {
+                mView.updateResources();
+                if (mView.isListening()) {
+                    refreshAllTiles();
+                }
+            };
 
     private View.OnTouchListener mTileLayoutTouchListener = new View.OnTouchListener() {
         @Override
@@ -87,18 +87,31 @@ public class QSPanelController extends QSPanelControllerBase<QSPanel> {
     };
 
     @Inject
-    QSPanelController(QSPanel view, TunerService tunerService,
+    QSPanelController(
+            QSPanel view,
+            TunerService tunerService,
             QSTileHost qstileHost, QSCustomizerController qsCustomizerController,
             @Named(QS_USING_MEDIA_PLAYER) boolean usingMediaPlayer,
             @Named(QS_PANEL) MediaHost mediaHost,
             QSTileRevealController.Factory qsTileRevealControllerFactory,
-            DumpManager dumpManager, MetricsLogger metricsLogger, UiEventLogger uiEventLogger,
-            QSLogger qsLogger, BrightnessController.Factory brightnessControllerFactory,
+            DumpManager dumpManager,
+            MetricsLogger metricsLogger,
+            UiEventLogger uiEventLogger,
+            QSLogger qsLogger,
+            BrightnessController.Factory brightnessControllerFactory,
             BrightnessSliderController.Factory brightnessSliderFactory,
             FalsingManager falsingManager,
             StatusBarKeyguardViewManager statusBarKeyguardViewManager) {
-        super(view, qstileHost, qsCustomizerController, usingMediaPlayer, mediaHost,
-                metricsLogger, uiEventLogger, qsLogger, dumpManager);
+        super(view,
+              qstileHost,
+              qsCustomizerController,
+              usingMediaPlayer,
+              mediaHost,
+              metricsLogger,
+              uiEventLogger,
+              qsLogger,
+              dumpManager);
+
         mTunerService = tunerService;
         mQsCustomizerController = qsCustomizerController;
         mQsTileRevealControllerFactory = qsTileRevealControllerFactory;
@@ -131,6 +144,7 @@ public class QSPanelController extends QSPanelControllerBase<QSPanel> {
         mTunerService.addTunable(mView, QS_SHOW_BRIGHTNESS);
         mTunerService.addTunable(mView, QS_SHOW_AUTO_BRIGHTNESS);
         mTunerService.addTunable(mView, QS_SHOW_BRIGHTNESS_SLIDER);
+
         mView.updateResources();
         if (mView.isListening()) {
             refreshAllTiles();

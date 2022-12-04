@@ -70,7 +70,7 @@ interface UserTracker : UserContentResolverProvider, UserContextProvider {
          * Notifies that the current user has changed.
          */
         @JvmDefault
-        fun onUserChanged(newUser: Int, userContext: Context) {}
+        fun onUserChanged(newUser: Int,  userContext: Context) {}
 
         /**
          * Notifies that the current user's profiles have changed.

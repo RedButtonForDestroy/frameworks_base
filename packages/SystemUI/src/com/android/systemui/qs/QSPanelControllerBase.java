@@ -118,9 +118,6 @@ public abstract class QSPanelControllerBase<T extends QSPanel> extends ViewContr
     @Nullable
     private Runnable mUsingHorizontalLayoutChangedListener;
 
-    protected final SystemSettings mSystemSettings;
-    private final ContentObserver mSettingsObserver;
-
     protected QSPanelControllerBase(
             T view,
             QSTileHost host,
@@ -130,10 +127,7 @@ public abstract class QSPanelControllerBase<T extends QSPanel> extends ViewContr
             MetricsLogger metricsLogger,
             UiEventLogger uiEventLogger,
             QSLogger qsLogger,
-            DumpManager dumpManager,
-            @Main Handler mainHandeler,
-            SystemSettings systemSettings
-    ) {
+            DumpManager dumpManager) {
         super(view);
         mHost = host;
         mQsCustomizerController = qsCustomizerController;
@@ -145,20 +139,6 @@ public abstract class QSPanelControllerBase<T extends QSPanel> extends ViewContr
         mDumpManager = dumpManager;
         mShouldUseSplitNotificationShade =
                 LargeScreenUtils.shouldUseSplitNotificationShade(getResources());
-
-        mSystemSettings = systemSettings;
-        mSettingsObserver = new ContentObserver(mainHandler) {
-            @Override
-            public void onChange(boolean selfChange, @Nullable Uri uri) {
-                if (uri == null) return;
-                
-                final String key = uri.getLastPathSegment();
-                
-                if (key == null) return;
-                
-                handleSettingsChange(key);
-            }
-        };
     }
 
     @Override
@@ -195,10 +175,6 @@ public abstract class QSPanelControllerBase<T extends QSPanel> extends ViewContr
         mDumpManager.registerDumpable(mView.getDumpableTag(), this);
     }
 
-    protected void registerObserver(String key) {
-        mSystemSettings.registerContentObserverForUser(key, mSettingsObserver, UserHandle.USER_ALL);
-    }
-
     @Override
     protected void onViewDetached() {
         mView.removeOnConfigurationChangedListener(mOnConfigurationChangedListener);
@@ -213,7 +189,6 @@ public abstract class QSPanelControllerBase<T extends QSPanel> extends ViewContr
         }
         mRecords.clear();
         mDumpManager.unregisterDumpable(mView.getDumpableTag());
-        mSystemSettings.unregisterContentObserver(mSettingsObserver);
     }
 
     @Nullable
@@ -358,7 +333,6 @@ public abstract class QSPanelControllerBase<T extends QSPanel> extends ViewContr
         if (horizontal != mUsingHorizontalLayout || force) {
             mUsingHorizontalLayout = horizontal;
             mView.setUsingHorizontalLayout(mUsingHorizontalLayout, mMediaHost.getHostView(), force);
-            updateBrightnessMirror();
             updateMediaDisappearParameters();
             if (mUsingHorizontalLayoutChangedListener != null) {
                 mUsingHorizontalLayoutChangedListener.run();
@@ -367,8 +341,6 @@ public abstract class QSPanelControllerBase<T extends QSPanel> extends ViewContr
         }
         return false;
     }
-
-    protected abstract void updateBrightnessMirror();
 
     /**
      * Update the way the media disappears based on if we're using the horizontal layout
